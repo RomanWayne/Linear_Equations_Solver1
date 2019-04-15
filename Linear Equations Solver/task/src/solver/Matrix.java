@@ -16,8 +16,8 @@ public class Matrix {
         Row imRow = sysEq.get(idxImRow);
         Row mdfyRow = sysEq.get(idxMdfyRow);
         if(imRow.getCoeffs().get(idxImRow) != 0) {
-            Double factor = (-1) * mdfyRow.getCoeffs().get(idxImRow) / imRow.getCoeffs().get(idxImRow);
-            List<Double> result = new ArrayList<Double>();
+            double factor = (-1) * mdfyRow.getCoeffs().get(idxImRow) / imRow.getCoeffs().get(idxImRow);
+            List<Double> result = new ArrayList<>();
             for (int i = 0; i < imRow.getCoeffs().size(); i++) {
                 result.add(i, mdfyRow.getCoeffs().get(i) + imRow.multiply(factor).get(i));
             }
@@ -97,8 +97,8 @@ public class Matrix {
         List<Double> answer = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         double tmp;
-        int idxAnswer = sysEq.size();
-        for(int i = 0; i < sysEq.size(); i ++){
+        int idxAnswer = sysEq.get(0).getCoeffs().size() - 1;
+        for(int i = 0; i < idxAnswer; i ++){
             answer.add(i, sysEq.get(i).getCoeffs().get(idxAnswer));
         }
         for(String s : swapHistory){

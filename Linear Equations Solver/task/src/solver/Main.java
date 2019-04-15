@@ -10,13 +10,18 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
-        //File file = new File("Linear Equations Solver/task/in.txt");
+    public static void main(String[] args){
+        /*ComplexNumber v1 = new ComplexNumber(4, 5);
+        ComplexNumber v2 = new ComplexNumber(-1, 0);
+        v1.multiply(v2);
+        System.out.println(v1.toString());*/
+
+
         File file = new File(args[1]);
         try(PrintWriter printWriter = new PrintWriter(args[3]);
-                Scanner scanner = new Scanner(file);){
+                Scanner scanner = new Scanner(file)){
         String[] record = scanner.nextLine().split(" ");
-        List<Row> rowList = new ArrayList<Row>();
+        List<Row> rowList = new ArrayList<>();
         int cntVar = Integer.parseInt(record[0]);
         int cntEq = Integer.parseInt(record[1]);
         for(int i = 0; i <cntEq; i++){
@@ -29,16 +34,16 @@ public class Main {
             rowList.add(row);
         }
         Matrix matrix = new Matrix(rowList);
-        //System.out.println(matrix.toString());
 
 
-        for(int i = 0; i < cntVar; i++){
+        for(int i = 0; i < (cntVar < cntEq ? cntVar : cntEq); i++){
             if(matrix.toDiagonalView(i)) {
-                for (int j = i + 1; j < cntVar; j++) {
+                for (int j = i + 1; j < cntEq; j++) {
                     matrix.plus(i, j);
                 }
             }else {break;}
         }
+        //System.out.println(matrix.toString());
 
         if(matrix.isExistsSolution()) {
             if(!matrix.isInfSolutions()) {
@@ -56,7 +61,6 @@ public class Main {
         }
 
         } catch (IOException e){
-            //e.printStackTrace();
             System.out.println("файлы не найдены");
         }
 
