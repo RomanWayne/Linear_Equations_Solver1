@@ -1,9 +1,6 @@
 package solver;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,39 +8,49 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args){
-        /*ComplexNumber v1 = new ComplexNumber(4, 5);
-        ComplexNumber v2 = new ComplexNumber(-1, 0);
+     /*   ComplexNumber v1 = new ComplexNumber(1, 0);
+        ComplexNumber v2 = new ComplexNumber(-1, 3);
         v1.multiply(v2);
         System.out.println(v1.toString());*/
 
 
-        File file = new File(args[1]);
-        try(PrintWriter printWriter = new PrintWriter(args[3]);
-                Scanner scanner = new Scanner(file)){
-        String[] record = scanner.nextLine().split(" ");
-        List<Row> rowList = new ArrayList<>();
+        try(BufferedReader reader = new BufferedReader(new FileReader(args[1]));
+            FileWriter fileWriter = new FileWriter(args[3])){
+        String[] record = reader.readLine().split(" ");
+        List<ComplexRow> rowList = new ArrayList<>();
         int cntVar = Integer.parseInt(record[0]);
         int cntEq = Integer.parseInt(record[1]);
         for(int i = 0; i <cntEq; i++){
-            List<Double> listD = new ArrayList<>();
-            record = scanner.nextLine().split(" ");
+            /*List<Double> listD = new ArrayList<>();
+            record = reader.readLine().split(" ");
             for (String s : record){
                 listD.add(Double.parseDouble(s));
             }
             Row row = new Row(listD, i);
+            rowList.add(row);*/
+            List<ComplexNumber> listD = new ArrayList<>();
+            record = reader.readLine().split(" ");
+            for(String s : record){
+                listD.add(new ComplexNumber(s));
+            }
+            ComplexRow row = new ComplexRow(listD, i);
             rowList.add(row);
+
         }
-        Matrix matrix = new Matrix(rowList);
 
 
+
+        ComplexMatrix matrix = new ComplexMatrix(rowList);
         for(int i = 0; i < (cntVar < cntEq ? cntVar : cntEq); i++){
+            System.out.println(matrix);
             if(matrix.toDiagonalView(i)) {
+                System.out.println(matrix);
                 for (int j = i + 1; j < cntEq; j++) {
+                    System.out.println(matrix);
                     matrix.plus(i, j);
                 }
             }else {break;}
         }
-        //System.out.println(matrix.toString());
 
         if(matrix.isExistsSolution()) {
             if(!matrix.isInfSolutions()) {
@@ -52,12 +59,12 @@ public class Main {
                         matrix.plus(i, j);
                     }
                 }
-                printWriter.print(matrix.getSolution());
+                fileWriter.write(matrix.getSolution());
             } else {
-                printWriter.print("Infinite solutions");
+                fileWriter.write("Infinite solutions");
             }
         } else{
-            printWriter.print("No solutions");
+            fileWriter.write("No solutions");
         }
 
         } catch (IOException e){

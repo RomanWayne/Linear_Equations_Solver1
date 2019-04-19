@@ -1,5 +1,7 @@
 package solver;
 
+import java.text.DecimalFormat;
+
 public class ComplexNumber {
     private double re;
     private double im;
@@ -8,38 +10,91 @@ public class ComplexNumber {
         this.re = re;
         this.im = im;
     }
+    public ComplexNumber(ComplexNumber complexNumber){
+        this.re = complexNumber.re;
+        this.im = complexNumber.im;
+    }
+    public ComplexNumber(String str){
+        if(!str.contains("+") && !str.contains("-")) {
+            if(str.contains("i")){
+                this.re = 0;
+                this.im = Double.parseDouble(str.replace("i", ""));
+            } else {
+                this.re = Double.parseDouble(str);
+                this.im = 0;
+            }
+        }else{
+            int minus1 = str.indexOf("-"); //0, n, -1
+            int minus2 = str.indexOf("-", 1); //n, -1
+            int plus = str.indexOf("+"); //n, -1
+            if(minus1 > 0){
+                this.re = Double.parseDouble(str.substring(0, minus1));
+                this.im = Double.parseDouble(str.substring(minus1).replace("i", ""));
+            }else if(plus > 0 &&  minus1 == -1){
+                this.re = Double.parseDouble(str.substring(0, plus));
+                this.im = Double.parseDouble(str.substring(plus + 1).replace("i", ""));
+            }else if(minus1 == 0 && minus2 == -1 && plus == -1){
+                if(str.contains("i")){
+                    this.re = 0;
+                    this.im = Double.parseDouble(str.replace("i", ""));
+                } else {
+                    this.re = Double.parseDouble(str);
+                    this.im = 0;
+                }
+            }else if(minus1 == 0 && plus > 0){
+                this.re = Double.parseDouble(str.substring(0, plus));
+                this.im = Double.parseDouble(str.substring(plus + 1).replace("i", ""));
+            }else if(minus1 == 0 && minus2 > 0){
+                this.re = Double.parseDouble(str.substring(0, minus2));
+                this.im = Double.parseDouble(str.substring(minus2).replace("i", ""));
+            }
+        }
 
-    public void add(ComplexNumber complexNumber){
-        this.re = this.re + complexNumber.re;
-        this.im = this.im + complexNumber.im;
+
     }
 
-    public void multiply(ComplexNumber complexNumber){
+    public ComplexNumber add(ComplexNumber complexNumber){
+        this.re = this.re + complexNumber.re;
+        this.im = this.im + complexNumber.im;
+        return this;
+    }
+
+    public ComplexNumber multiply(ComplexNumber complexNumber){
         double re = this.re * complexNumber.re - this.im * complexNumber.im;
         double im = this.re * complexNumber.im + this.im * complexNumber.re;
         this.re = re;
         this.im = im;
+        return this;
     }
 
     public void conjugate(){
         this.im = (-1) * this.im;
     }
 
-    public void divide(ComplexNumber complexNumber){
+    public ComplexNumber divide(ComplexNumber complexNumber){
         double re = (this.re * complexNumber.re + this.im * complexNumber.im) / (Math.pow(complexNumber.re, 2) + Math.pow(complexNumber.im, 2));
         double im = (this.im * complexNumber.re - this.re * complexNumber.im) / (Math.pow(complexNumber.re, 2) + Math.pow(complexNumber.im, 2));
         this.im = im;
         this.re = re;
+        return this;
     }
 
     public String toString(){
         String answer;
+        DecimalFormat f = new DecimalFormat("##.00");
         if (this.im == 0){
-            return String.valueOf(this.re);
+            return String.valueOf(f.format(this.re));
         }
         if (this.re == 0){
-            return String.valueOf(this.im) + 'i';
+            return String.valueOf(f.format(this.im)) + 'i';
         }
-        return String.valueOf(this.re) + (this.im > 0 ? '+': '-') + Math.abs(this.im) + 'i';
+        return String.valueOf(f.format(this.re)) + (this.im > 0 ? '+': '-') + f.format(Math.abs(this.im)) + 'i';
+    }
+
+    public boolean isNull(){
+        if(this.re == 0  && this.im == 0) {
+            return true;
+        }
+        return false;
     }
 }
