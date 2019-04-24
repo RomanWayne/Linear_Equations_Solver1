@@ -15,10 +15,10 @@ public class ComplexNumber {
         this.im = complexNumber.im;
     }
     public ComplexNumber(String str){
-        if(!str.contains("+") && !str.contains("-")) {
+        if(!str.contains("+") && !str.contains("-")) {//1
             if(str.contains("i")){
                 this.re = 0;
-                this.im = Double.parseDouble(str.replace("i", ""));
+                this.im = Double.parseDouble(str.replace("i", (str.equals("i") ? "1" : str.equals("-i") ? "1" : "")));
             } else {
                 this.re = Double.parseDouble(str);
                 this.im = 0;
@@ -27,26 +27,42 @@ public class ComplexNumber {
             int minus1 = str.indexOf("-"); //0, n, -1
             int minus2 = str.indexOf("-", 1); //n, -1
             int plus = str.indexOf("+"); //n, -1
-            if(minus1 > 0){
+            if(minus1 > 0){//2
                 this.re = Double.parseDouble(str.substring(0, minus1));
-                this.im = Double.parseDouble(str.substring(minus1).replace("i", ""));
-            }else if(plus > 0 &&  minus1 == -1){
+                if(str.substring(minus1).equals("-i")){
+                    this.im = -1;
+                }else{
+                    this.im = Double.parseDouble(str.substring(minus1).replace("i", ""));
+                }
+            }else if(plus > 0 &&  minus1 == -1){//3
                 this.re = Double.parseDouble(str.substring(0, plus));
-                this.im = Double.parseDouble(str.substring(plus + 1).replace("i", ""));
-            }else if(minus1 == 0 && minus2 == -1 && plus == -1){
+                if(str.substring(plus + 1).equals("i")){
+                    this.im = 1;
+                }else{
+                    this.im = Double.parseDouble(str.substring(plus + 1).replace("i", ""));
+                }
+            }else if(minus1 == 0 && minus2 == -1 && plus == -1){ //4
                 if(str.contains("i")){
                     this.re = 0;
-                    this.im = Double.parseDouble(str.replace("i", ""));
+                    this.im = Double.parseDouble(str.replace("i", str.equals("-i") ? "1" : ""));
                 } else {
                     this.re = Double.parseDouble(str);
                     this.im = 0;
                 }
-            }else if(minus1 == 0 && plus > 0){
+            }else if(minus1 == 0 && plus > 0){//5
                 this.re = Double.parseDouble(str.substring(0, plus));
-                this.im = Double.parseDouble(str.substring(plus + 1).replace("i", ""));
-            }else if(minus1 == 0 && minus2 > 0){
+                if(str.substring(plus + 1).equals("i")){
+                    this.im = 1;
+                }else {
+                    this.im = Double.parseDouble(str.substring(plus + 1).replace("i", ""));
+                }
+            }else if(minus1 == 0 && minus2 > 0){ //6
                 this.re = Double.parseDouble(str.substring(0, minus2));
-                this.im = Double.parseDouble(str.substring(minus2).replace("i", ""));
+                if (str.substring(minus2).equals("-i")){
+                    this.im = -1;
+                }else {
+                    this.im = Double.parseDouble(str.substring(minus2).replace("i", ""));
+                }
             }
         }
 
@@ -62,9 +78,9 @@ public class ComplexNumber {
     public ComplexNumber multiply(ComplexNumber complexNumber){
         double re = this.re * complexNumber.re - this.im * complexNumber.im;
         double im = this.re * complexNumber.im + this.im * complexNumber.re;
-        this.re = re;
-        this.im = im;
-        return this;
+        /*this.re = re;
+        this.im = im;*/
+        return new ComplexNumber(re, im);
     }
 
     public void conjugate(){
@@ -81,20 +97,24 @@ public class ComplexNumber {
 
     public String toString(){
         String answer;
-        DecimalFormat f = new DecimalFormat("##.00");
+        //DecimalFormat f = new DecimalFormat("0.##");
         if (this.im == 0){
-            return String.valueOf(f.format(this.re));
+            return String.valueOf(this.re);
         }
         if (this.re == 0){
-            return String.valueOf(f.format(this.im)) + 'i';
+            return (this.im == 1 ? "" : this.im == -1 ? "-" : String.valueOf(this.im)) + 'i';
         }
-        return String.valueOf(f.format(this.re)) + (this.im > 0 ? '+': '-') + f.format(Math.abs(this.im)) + 'i';
+        return String.valueOf(this.re) + (this.im > 0 ? '+': '-') + (Math.abs(this.im) == 1 ? "" : Math.abs(this.im)) + 'i';
     }
 
     public boolean isNull(){
-        if(this.re == 0  && this.im == 0) {
+        if(this.re == 0d  && this.im == 0d) {
             return true;
         }
         return false;
+    }
+
+    public double abs(){
+        return this.re*this.re + this.im*this.im;
     }
 }

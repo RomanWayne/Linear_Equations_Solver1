@@ -38,10 +38,10 @@ public class ComplexRow {
         return true;
     }
 
-    public ComplexNumber getSumCoef(){
-        ComplexNumber sum = new ComplexNumber(0, 0);
+    public double getAbsSumCoef(){
+        double sum = 0;
         for(int i = 0; i < this.coeffs.size() - 1; i++){
-            sum.add(this.coeffs.get(i));
+            sum = sum + this.coeffs.get(i).abs();
         }
         return sum;
     }

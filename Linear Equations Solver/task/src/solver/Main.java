@@ -56,6 +56,7 @@ public class Main {
             if(!matrix.isInfSolutions()) {
                 for (int i = cntVar - 1; i > 0; i--) {
                     for (int j = i - 1; j >= 0; j--) {
+                        System.out.println(matrix);
                         matrix.plus(i, j);
                     }
                 }

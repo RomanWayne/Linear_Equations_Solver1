@@ -86,7 +86,7 @@ public class ComplexMatrix {
         StringBuilder result = new StringBuilder();
         for(ComplexRow r : sysEq){
             for(ComplexNumber d: r.getCoeffs()){
-                result.append(d).append("\t");
+                result.append(d).append("\t").append("\t");
             }
             result.append("\n");
         }
@@ -115,7 +115,7 @@ public class ComplexMatrix {
 
     public boolean isExistsSolution(){
         for(ComplexRow r : sysEq){
-            if(r.getSumCoef().isNull() && !r.getFreeCoef().isNull()){
+            if(r.getAbsSumCoef() == 0 && !r.getFreeCoef().isNull()){
                 return false;
             }
         }
@@ -125,7 +125,7 @@ public class ComplexMatrix {
     public boolean isInfSolutions(){
         int cntSignEqua = sysEq.size();
         for(ComplexRow r : sysEq){
-            if(r.getSumCoef().isNull() && r.getFreeCoef().isNull()){
+            if(r.getAbsSumCoef() == 0 && r.getFreeCoef().isNull()){
                 cntSignEqua --;
             }
         }
